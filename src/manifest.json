@@ -1,0 +1,27 @@
+{
+  "name": "gridX Health Check",
+  "author": {
+    "name": "Wolfgang Werner",
+    "email": "w.werner@gridx.de",
+    "url": "https://gridx.ai"
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "location": {
+    "support": {
+      "ticket_sidebar": {
+        "url": "http://localhost:3000/",
+        "flexible": true
+      }
+    }
+  },
+  "version": "1.0",
+  "frameworkVersion": "2.0",
+  "parameters": [
+    {
+      "name": "gridXApiToken",
+      "type": "text",
+      "secure": true
+    }
+  ]
+}
