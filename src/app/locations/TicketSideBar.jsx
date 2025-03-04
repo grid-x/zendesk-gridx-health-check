@@ -74,13 +74,13 @@ const TicketSideBar = () => {
       url: 'https://api.gridx.de/health-checks',
       type: 'POST',
       headers: {
-        Authorization: 'Token {{setting.gridXApiToken}}',
+        Authorization: "Token {{setting.gridXApiToken}}",
         'content-type': 'application/json',
         accept: 'application/json'
       },
       accepts: 'application/json',
       secure: true,
-      cors: true,
+      cors: false,
       data: JSON.stringify({
         systems: [{ id: systemId }],
         checks: [{ type: 'peakExceeded' }, { type: 'nighttimePvProduction' }]
@@ -94,7 +94,7 @@ const TicketSideBar = () => {
       })
       .catch((err) => {
         console.error(err)
-        setResult(mockResult)
+        setResult(err)
       })
   }
 

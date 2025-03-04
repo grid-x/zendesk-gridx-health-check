@@ -11,7 +11,8 @@
     "build": "vite build --mode production",
     "lint": "eslint . --ext js,jsx --max-warnings 0",
     "start": "zcli apps:server src",
-    "start:prod": "zcli apps:server dist"
+    "start:prod": "zcli apps:server dist",
+    "build:prod": "zcli apps:create ./dist"
   },
   "dependencies": {
     "@zendeskgarden/css-bedrock": "^9.1.1",
