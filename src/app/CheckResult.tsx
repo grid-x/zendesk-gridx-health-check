@@ -70,6 +70,7 @@ const CheckResultItem = ({
         <Tooltip
           type="light"
           size="extra-large"
+          placement='start'
           content={
             <>
               <Title>{name}</Title>
