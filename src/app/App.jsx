@@ -1,12 +1,11 @@
-import { lazy, Suspense } from 'react'
+import { Suspense } from 'react'
 import { useLocation } from './hooks/useClient'
 import { TranslationProvider } from './contexts/TranslationProvider'
 import { DEFAULT_THEME, ThemeProvider } from '@zendeskgarden/react-theming'
-
-const TicketSideBar = lazy(() => import('./locations/TicketSideBar'))
+import HealthChecks from './HealthChecks'
 
 const LOCATIONS = {
-  ticket_sidebar: TicketSideBar,
+  ticket_sidebar: HealthChecks,
   default: () => null
 }
 

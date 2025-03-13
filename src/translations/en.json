@@ -1,16 +1,16 @@
 {
   "app": {
-    "name": "Example App",
-    "short_description": "Short Description",
-    "long_description": "Long Description",
+    "name": "gridX Health Check",
+    "short_description": "Runs Health Checks on a gridBox",
+    "long_description": "To help diagnose issues with gridBoxes, you can run checks on any gridBox identified by its serial number. New checks will be made available continuously",
     "installation_instructions": "Configure the following app settings, then click Install:...",
-    "title": "Example App"
+    "title": "gridX Health Check"
   },
   "ticket_sidebar": {
-    "title": "Hello from Ticket Side Bar",
-    "button": "Run All Checks"
-  },
-  "modal": {
-    "title": "Hello from Modal"
+    "button": "Run Checks",
+    "serial": {
+      "label": "Gateway S/N",
+      "invalid": "Gateway S/N must be a valid gridBox serial number"
+    }
   }
 }
