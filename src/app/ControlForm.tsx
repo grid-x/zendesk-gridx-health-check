@@ -10,23 +10,24 @@ import { StyledGrid } from './StyledGrid'
 const serialRegex = /^[A-Z](\d{3}-){5}(B|P)-X$/
 const isSerial = (serial) => serialRegex.test(serial)
 
+
 type ControlFormProps = {
   checkFn: () => void
-  setGatewaySn: (sn: string) => void
-  gatewaySn: string
+  setSerialNo: (id: string) => void
+  serialNo: string
 }
-const ControlForm = ({ checkFn, setGatewaySn, gatewaySn }: ControlFormProps) => {
+const ControlForm = ({ checkFn, setSerialNo, serialNo }: ControlFormProps) => {
   const { t } = useI18n()
 
   const [validationResult, setValidationResult] = useState<IInputProps["validation"]>(undefined)
 
-  const handleGatewaySnChange = (e) => {
+  const handleIdChange = (e) => {
     if (!isSerial(e.target.value)) {
       setValidationResult('warning')
     } else {
       setValidationResult(undefined)
     }
-    setGatewaySn(e.target.value)
+    setSerialNo(e.target.value)
   }
 
   return (
@@ -36,9 +37,9 @@ const ControlForm = ({ checkFn, setGatewaySn, gatewaySn }: ControlFormProps) => 
           <Field>
             <InputGroup>
               <Input
-                value={gatewaySn}
+                value={serialNo}
                 placeholder={t('ticket_sidebar.serial.label')}
-                onChange={handleGatewaySnChange}
+                onChange={handleIdChange}
                 validation={validationResult}
               />
               <Button isPrimary onClick={checkFn} disabled={!!validationResult}>
@@ -50,7 +51,7 @@ const ControlForm = ({ checkFn, setGatewaySn, gatewaySn }: ControlFormProps) => 
       </Row>
       <Row>
         <Col>
-          {gatewaySn && !isSerial(gatewaySn) && (
+          {serialNo && !isSerial(serialNo) && (
             <Message validation="warning">{t('ticket_sidebar.serial.invalid')}</Message>
           )}
         </Col>

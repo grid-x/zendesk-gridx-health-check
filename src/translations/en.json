@@ -21,6 +21,10 @@
     "serial": {
       "label": "Gateway S/N",
       "invalid": "Gateway S/N must be a valid gridBox serial number"
+    },
+    "system_id": {
+      "label": "System UUID",
+      "invalid": "System UUID must be a valid UUID"
     }
   }
 }
