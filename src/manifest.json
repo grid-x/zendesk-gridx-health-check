@@ -21,7 +21,14 @@
     {
       "name": "gridXApiToken",
       "type": "text",
-      "secure": true
+      "secure": true,
+      "required":true
+    },{
+      "name": "gridXOrgAccount",
+      "type":"text",
+      "secure":false,
+      "required":true
     }
+
   ]
 }

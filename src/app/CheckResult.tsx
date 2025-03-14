@@ -6,8 +6,7 @@ import { Tooltip, Title, Paragraph } from '@zendeskgarden/react-tooltips'
 import { StyledGrid } from './StyledGrid'
 import { SystemCheckResult, IndividualCheckResult, CheckType, HealthCheckMetaData } from '../HealthCheckAPI'
 import { useI18n } from './hooks/useI18n'
-import { Accordion } from '@zendeskgarden/react-accordions';
-
+import { Accordion } from '@zendeskgarden/react-accordions'
 
 type HealthCheckInfo = Record<string, HealthCheckMetaData>
 
@@ -32,24 +31,24 @@ const CheckResults = ({ result, checkInfo }: CheckResultsProps) => {
 }
 
 type CheckResultProps = SystemCheckResult & {
+  key: string
   checkInfo: HealthCheckInfo
 }
 // List of checks for one system
 const CheckResult = ({ system, results, checkInfo }: CheckResultProps) => (
   <>
+    System UUID<br/>
     <b>{system.id}</b>
-    <table>
-      <tbody>
-        {results.map((res) => (
-          <CheckResultItem
-            key={res.type}
-            name={checkInfo[res.type].name}
-            description={checkInfo[res.type].description}
-            {...res}
-          />
-        ))}
-      </tbody>
-    </table>
+    <Accordion level={4}>
+      {results.map((res) => (
+        <CheckResultItem
+          key={res.type}
+          name={checkInfo[res.type].name}
+          description={checkInfo[res.type].description}
+          {...res}
+        />
+      ))}
+    </Accordion>
   </>
 )
 
@@ -60,43 +59,32 @@ const CheckResultItem = ({
   name,
   description,
   properties
-}: IndividualCheckResult & HealthCheckMetaData) => {
+}: IndividualCheckResult & HealthCheckMetaData & {key: string}) => {
   const { t } = useI18n()
 
   return (
-    <tr>
-      <td>
+    <Accordion.Section>
+      <Accordion.Header>
         <ResultChip success={success} />
-      </td>
-      <td>
-        <Tooltip
-          type="light"
-          size="extra-large"
-          placement="auto"
-          content={
+        <Accordion.Label>{name}</Accordion.Label>
+      </Accordion.Header>
+      <Accordion.Panel>
+        {description}
+        <dl>
+          {Object.entries(properties).map((k, v) => (
             <>
-              <Title>{name}</Title>
-              <Paragraph>{description}</Paragraph>
-              <dl>
-                {Object.entries(properties).map((k, v) => (
-                  <>
-                    <dt>{k}</dt>
-                    <dd>{v}</dd>
-                  </>
-                ))}
-              </dl>
+              <dt>{k}</dt>
+              <dd>{v}</dd>
             </>
-          }
-        >
-          <span>{name}</span>
-        </Tooltip>
-      </td>
-    </tr>
+          ))}
+        </dl>
+      </Accordion.Panel>
+    </Accordion.Section>
   )
 }
 
 const ResultChip = ({ success }) => (
-  <Tag hue={success ? 'successHue' : 'dangerHue'} style={{ width: '4em' }}>
+  <Tag hue={success ? 'successHue' : 'dangerHue'} style={{ width: '4em', minWidth: '4em' }}>
     <span>{success ? 'pass' : 'fail'}</span>
   </Tag>
 )
