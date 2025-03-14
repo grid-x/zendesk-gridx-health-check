@@ -88,6 +88,7 @@ const HealthChecks = () => {
   const check = () => {
     const options = {
       ...defaultHttpOptions,
+      type: 'POST',
       data: JSON.stringify({
         systems: [
           {
