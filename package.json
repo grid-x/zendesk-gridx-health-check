@@ -12,7 +12,7 @@
     "lint": "eslint . --ext js,jsx --max-warnings 0",
     "start": "zcli apps:server src",
     "start:prod": "zcli apps:server dist",
-    "build:prod": "zcli apps:create ./dist"
+    "build:prod": "zcli apps:package ./dist"
   },
   "dependencies": {
     "@zendeskgarden/css-bedrock": "^9.1.1",
@@ -20,6 +20,7 @@
     "@zendeskgarden/react-forms": "^8.76",
     "@zendeskgarden/react-grid": "^8.76.3",
     "@zendeskgarden/react-loaders": "^8.76.3",
+    "@zendeskgarden/react-accordions": "^8.76.3",
     "@zendeskgarden/react-tags": "^8.76.9",
     "@zendeskgarden/react-theming": "^8.76.9",
     "@zendeskgarden/react-typography": "^8.76.3",

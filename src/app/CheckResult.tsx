@@ -6,6 +6,8 @@ import { Tooltip, Title, Paragraph } from '@zendeskgarden/react-tooltips'
 import { StyledGrid } from './StyledGrid'
 import { SystemCheckResult, IndividualCheckResult, CheckType, HealthCheckMetaData } from '../HealthCheckAPI'
 import { useI18n } from './hooks/useI18n'
+import { Accordion } from '@zendeskgarden/react-accordions';
+
 
 type HealthCheckInfo = Record<string, HealthCheckMetaData>
 
@@ -70,11 +72,19 @@ const CheckResultItem = ({
         <Tooltip
           type="light"
           size="extra-large"
-          placement='start'
+          placement="auto"
           content={
             <>
               <Title>{name}</Title>
               <Paragraph>{description}</Paragraph>
+              <dl>
+                {Object.entries(properties).map((k, v) => (
+                  <>
+                    <dt>{k}</dt>
+                    <dd>{v}</dd>
+                  </>
+                ))}
+              </dl>
             </>
           }
         >

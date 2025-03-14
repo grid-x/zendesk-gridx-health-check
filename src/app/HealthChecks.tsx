@@ -4,7 +4,7 @@ import { useClient } from './hooks/useClient'
 
 import ControlForm from './ControlForm'
 import CheckResults from './CheckResult'
-import { HealthCheckResult, HealthCheckMetaDataResult, SystemCheckResult } from '../HealthCheckAPI'
+import { HealthCheckResult, HealthCheckMetaDataResult, HealthCheckMetaData, SystemCheckResult } from '../HealthCheckAPI'
 import CheckResultSkeleton from './CheckResultSkeleton'
 
 const mockResult: HealthCheckResult = {
@@ -176,8 +176,8 @@ const HealthChecks = () => {
       ...defaultHttpOptions,
       data: JSON.stringify({
         systems: [{ sn: gatewaySn }],
-        //FIXME: use default checks
-        checks: [{ type: 'peakExceeded' }, { type: 'nighttimePvProduction' }]
+        //Run all checks
+        checks: Object.values<HealthCheckMetaData>(checkInfo).map((c) => ({ type: c.type }))
       })
     }
 
