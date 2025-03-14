@@ -13,9 +13,8 @@ const defaultHttpOptions = {
   headers: {
     Authorization: 'Token {{setting.gridXApiToken}}',
     'x-gridx-accountID': '{{setting.gridXOrgAccount}}',
-    'content-type': 'application/json',
-    accept: 'application/json'
   },
+  contentType: 'application/json',
   accepts: 'application/json',
   secure: true,
   cors: false
