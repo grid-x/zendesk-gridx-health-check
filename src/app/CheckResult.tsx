@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col } from '@zendeskgarden/react-grid'
 import { Tag } from '@zendeskgarden/react-tags'
-import { Tooltip, Title, Paragraph } from '@zendeskgarden/react-tooltips'
+import { Table } from '@zendeskgarden/react-tables'
 
 import { StyledGrid } from './StyledGrid'
 import { SystemCheckResult, IndividualCheckResult, CheckType, HealthCheckMetaData } from '../HealthCheckAPI'
@@ -37,9 +37,10 @@ type CheckResultProps = SystemCheckResult & {
 // List of checks for one system
 const CheckResult = ({ system, results, checkInfo }: CheckResultProps) => (
   <>
-    System UUID<br/>
+    System UUID
+    <br />
     <b>{system.id}</b>
-    <Accordion level={4}>
+    <Accordion level={4} isExpandable defaultExpandedSections={[]}>
       {results.map((res) => (
         <CheckResultItem
           key={res.type}
@@ -59,7 +60,7 @@ const CheckResultItem = ({
   name,
   description,
   properties
-}: IndividualCheckResult & HealthCheckMetaData & {key: string}) => {
+}: IndividualCheckResult & HealthCheckMetaData & { key: string }) => {
   const { t } = useI18n()
 
   return (
@@ -70,14 +71,17 @@ const CheckResultItem = ({
       </Accordion.Header>
       <Accordion.Panel>
         {description}
-        <dl>
-          {Object.entries(properties).map((k, v) => (
-            <>
-              <dt>{k}</dt>
-              <dd>{v}</dd>
-            </>
-          ))}
-        </dl>
+        {Object.keys(properties)?.length &
+        (
+          <Table>
+              {Object.entries(properties).map((k, v) => (
+            <Table.Row>
+                  <Table.Cell>{k}</Table.Cell>
+                  <Table.Cell>{v}</Table.Cell>
+            </Table.Row>
+              ))}
+          </Table>
+        )}
       </Accordion.Panel>
     </Accordion.Section>
   )
