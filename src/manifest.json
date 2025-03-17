@@ -24,11 +24,6 @@
       "secure": true,
       "required":true
     },{
-      "name": "gridXOrgAccount",
-      "type":"text",
-      "secure":false,
-      "required":true
-    },{
       "name": "debug",
       "type":"checkbox",
       "secure":false

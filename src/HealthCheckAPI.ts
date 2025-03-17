@@ -7,7 +7,7 @@ export type CheckType = string // dynamically retrieved from the API
 export type IndividualCheckResult = {
   properties: Record<string, string>
   type: CheckType
-  success: boolean
+  state: "passed" | "failed" | "skipped"
 }
 
 export type SystemCheckResult = {

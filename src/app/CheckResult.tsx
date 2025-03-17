@@ -1,11 +1,10 @@
 import React from 'react'
 import { Row, Col } from '@zendeskgarden/react-grid'
 import { Tag } from '@zendeskgarden/react-tags'
-import { Table } from '@zendeskgarden/react-tables'
+import { Table, Row as TRow, Cell as TCell } from '@zendeskgarden/react-tables'
 
 import { StyledGrid } from './StyledGrid'
-import { SystemCheckResult, IndividualCheckResult, CheckType, HealthCheckMetaData } from '../HealthCheckAPI'
-import { useI18n } from './hooks/useI18n'
+import { SystemCheckResult, IndividualCheckResult, HealthCheckMetaData } from '../HealthCheckAPI'
 import { Accordion } from '@zendeskgarden/react-accordions'
 
 type HealthCheckInfo = Record<string, HealthCheckMetaData>
@@ -41,14 +40,16 @@ const CheckResult = ({ system, results, checkInfo }: CheckResultProps) => (
     <br />
     <b>{system.id}</b>
     <Accordion level={4} isExpandable defaultExpandedSections={[]}>
-      {results.map((res) => (
-        <CheckResultItem
-          key={res.type}
-          name={checkInfo[res.type].name}
-          description={checkInfo[res.type].description}
-          {...res}
-        />
-      ))}
+      {results
+        .filter((res) => res.type != 'connectionIssues') //FIXME: Include when we figure out how not to time out
+        .map((res) => (
+          <CheckResultItem
+            key={res.type}
+            name={checkInfo[res.type]?.name || res.type}
+            description={checkInfo[res.type]?.description}
+            {...res}
+          />
+        ))}
     </Accordion>
   </>
 )
@@ -56,40 +57,45 @@ const CheckResult = ({ system, results, checkInfo }: CheckResultProps) => (
 // Individual Check
 const CheckResultItem = ({
   type,
-  success,
+  state,
   name,
   description,
   properties
 }: IndividualCheckResult & HealthCheckMetaData & { key: string }) => {
-  const { t } = useI18n()
-
   return (
-    <Accordion.Section>
+    <Accordion.Section key={`check-result-${type}`}>
       <Accordion.Header>
-        <ResultChip success={success} />
+        <ResultChip state={state} />
         <Accordion.Label>{name}</Accordion.Label>
       </Accordion.Header>
       <Accordion.Panel>
         {description}
-        {Object.keys(properties)?.length &
-        (
-          <Table>
-            {Object.entries(properties).map((k, v) => (
-              <Table.Row>
-                <Table.Cell>{k}</Table.Cell>
-                <Table.Cell>{v}</Table.Cell>
-              </Table.Row>
+        {Object.keys(properties)?.length ? (
+          <Table size="small">
+            {Object.entries(properties).map(([k, v]) => (
+              <TRow>
+                <TCell>{k}</TCell>
+                <TCell>{v}</TCell>
+              </TRow>
             ))}
           </Table>
+        ) : (
+          <></>
         )}
       </Accordion.Panel>
     </Accordion.Section>
   )
 }
 
-const ResultChip = ({ success }) => (
-  <Tag hue={success ? 'successHue' : 'dangerHue'} style={{ width: '4em', minWidth: '4em' }}>
-    <span>{success ? 'pass' : 'fail'}</span>
+const resultStates = {
+  passed: { color: 'successHue', label: 'pass' },
+  failed: { color: 'dangerHue', label: 'fail' },
+  skipped: { color: 'warningHue', label: 'skip' }
+}
+
+const ResultChip = ({ state }) => (
+  <Tag hue={resultStates[state]?.color ?? 'primaryHue'} style={{ width: '4em', minWidth: '4em' }}>
+    <span>{resultStates[state]?.label ?? 'n/a'}</span>
   </Tag>
 )
 
