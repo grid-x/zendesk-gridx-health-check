@@ -88,9 +88,9 @@ const CheckResultItem = ({
 }
 
 const resultStates = {
-  passed: { color: 'successHue', label: 'pass' },
-  failed: { color: 'dangerHue', label: 'fail' },
-  skipped: { color: 'warningHue', label: 'skip' }
+  PASSED: { color: 'successHue', label: 'pass' },
+  FAILED: { color: 'dangerHue', label: 'fail' },
+  SKIPPED: { color: 'warningHue', label: 'skip' }
 }
 
 const ResultChip = ({ state }) => (
