@@ -12,7 +12,7 @@ const defaultHttpOptions = {
   url: 'https://api.gridx.de/health-checks',
   headers: {
     Authorization: 'Token {{setting.gridXApiToken}}',
-    'x-gridx-accountID': '{{setting.gridXOrgAccount}}',
+    'x-gridx-accountID': '{{setting.gridXOrgAccount}}'
   },
   contentType: 'application/json',
   accepts: 'application/json',
@@ -96,7 +96,9 @@ const HealthChecks = () => {
           }
         ],
         //Run all checks
-        checks: Object.values<HealthCheckMetaData>(checkInfo).map((c) => ({ type: c.type }))
+        checks: Object.values<HealthCheckMetaData>(checkInfo)
+          .filter((c) => c.type != 'connectionIssues')
+          .map((c) => ({ type: c.type }))
       })
     }
     if (debug) {

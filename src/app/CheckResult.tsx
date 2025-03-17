@@ -74,12 +74,12 @@ const CheckResultItem = ({
         {Object.keys(properties)?.length &
         (
           <Table>
-              {Object.entries(properties).map((k, v) => (
-            <Table.Row>
-                  <Table.Cell>{k}</Table.Cell>
-                  <Table.Cell>{v}</Table.Cell>
-            </Table.Row>
-              ))}
+            {Object.entries(properties).map((k, v) => (
+              <Table.Row>
+                <Table.Cell>{k}</Table.Cell>
+                <Table.Cell>{v}</Table.Cell>
+              </Table.Row>
+            ))}
           </Table>
         )}
       </Accordion.Panel>
