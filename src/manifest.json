@@ -27,6 +27,12 @@
       "name": "debug",
       "type":"checkbox",
       "secure":false
+    },
+    {
+      "name": "gridXSerialNumberFieldId",
+      "type":"text",
+      "secure":false,
+      "required": false
     }
 
   ]

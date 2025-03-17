@@ -10,9 +10,13 @@
         "label": "gridX API Token",
         "helpText": "gridX API organizational token to use. Needs to have the 'health-check:RequestCheck' permission."
       },
-      "gridXOrgAccount": {
-        "label": "gridX Organization UUID",
-        "helpText": "The UUID of your organizations's root account in gridX."
+      "gridXSerialNumberFieldId": {
+        "label": "gridBox Serial Number Field ID",
+        "helpText": "The Zendesk custom field ID that holds the gridBox serial number in tickets. Optional."
+      },
+      "debug": {
+        "label": "Enable debugging",
+        "helpText": "Write additional debug information to the browser development console."
       }
     }
   },

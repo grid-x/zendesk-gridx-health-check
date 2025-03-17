@@ -11,7 +11,7 @@ import { Alert, Title, Close } from '@zendeskgarden/react-notifications'
 const defaultHttpOptions = {
   url: 'https://api.gridx.de/health-checks',
   headers: {
-    Authorization: 'Token {{setting.gridXApiToken}}',
+    Authorization: 'Token {{setting.gridXApiToken}}'
   },
   contentType: 'application/json',
   accepts: 'application/json',
@@ -25,6 +25,7 @@ type IZafClient = {
   invoke: (...params: any) => void
   request: (...params: any) => Promise<any>
   metadata: (...params: any) => Promise<any>
+  get: (...params: any) => Promise<any>
 }
 type ApiErrorProps = {
   errorMessage: any
@@ -57,14 +58,24 @@ const HealthChecks = () => {
       client.invoke('resize', { width: '100%', height: '450px' })
 
       const appMeta = await client.metadata()
-      setDebug(!!appMeta.settings.debug)
+      const debugSetting = !!appMeta.settings.debug
+      setDebug(debugSetting)
+      const serialFieldID = appMeta?.settings?.gridXSerialNumberFieldId
+
+      if (serialFieldID) {
+        const sn = await getSerialFromCustomField(client, serialFieldID)
+        if (debugSetting) {
+          console.log(`Setting serial number ${sn} from custom field ${serialFieldID}`)
+        }
+        setSerialNo(sn)
+      }
 
       const options = {
         ...defaultHttpOptions,
         type: 'GET'
       }
 
-      if (debug) {
+      if (debugSetting) {
         console.log('Requesting ', options)
       }
 
@@ -128,6 +139,14 @@ const HealthChecks = () => {
       {loading && !apiError && <CheckResultSkeleton />}
     </>
   )
+}
+
+const getSerialFromCustomField = async (client: IZafClient, serialFieldID: string): Promise<string> => {
+  const serialFieldKey = `ticket.customField:custom_field_${serialFieldID}`
+  return client
+    .get(serialFieldKey)
+    .then((serialField) => serialField?.[serialFieldKey])
+    .catch((err) => console.error(err))
 }
 
 export default HealthChecks
