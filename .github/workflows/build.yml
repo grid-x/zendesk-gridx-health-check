@@ -26,16 +26,14 @@ jobs:
       - name: Install zcli
         run: npm i @zendesk/zcli -g
 
-      - name: Bump minor version
-        run: zcli apps:bump -m
-
-      - name: Bump minor version
-        run: zcli apps:bump -m
 
       - name: Install app dependencies
         run: npm install
       - name: Create dist directory
         run: npm run build
+      
+      - name: Bump minor version
+        run: zcli apps:bump -m dist  
       - name: Deploy the app
         run: zcli apps:update dist
 
