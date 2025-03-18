@@ -33,7 +33,7 @@ jobs:
         run: |
           zcli apps:bump -m src
           npm run build  
-          export RELEASE_VERSION=$(jq -r ".version" dist/manifest.json)
+          export RELEASE_VERSION=$(jq -r ".version" src/manifest.json)
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
           zcli apps:package dist
           mv dist/tmp/*.zip dist/tmp/zendesk-gridx-health-check_$RELEASE_VERSION.zip
