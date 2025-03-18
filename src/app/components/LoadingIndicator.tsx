@@ -4,7 +4,7 @@ import { Row, Col } from '@zendeskgarden/react-grid';
 import { MD, XXL } from '@zendeskgarden/react-typography';
 import { Skeleton } from '@zendeskgarden/react-loaders';
 
-const CheckResultSkeleton = () => (
+const LoadingIndicator = () => (
   <Row justifyContent="center">
     <Col sm={5}>
       <XXL>
@@ -19,4 +19,4 @@ const CheckResultSkeleton = () => (
   </Row>
 );
 
-export default CheckResultSkeleton;
+export default LoadingIndicator;

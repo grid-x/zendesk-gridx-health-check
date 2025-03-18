@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { useI18n } from './hooks/useI18n'
+import { useI18n } from '../hooks/useI18n'
 import { Button } from '@zendeskgarden/react-buttons'
 import { Row, Col } from '@zendeskgarden/react-grid'
 import { Field, IInputProps, Input, InputGroup, Message } from '@zendeskgarden/react-forms'
@@ -10,6 +10,7 @@ import { StyledGrid } from './StyledGrid'
 const serialRegex = /^[A-Z](\d{3}-){5}(B|P)-X$/
 const isSerial = (serial) => serialRegex.test(serial)
 
+type validationResult = IInputProps['validation']
 
 type ControlFormProps = {
   checkFn: () => void
@@ -19,13 +20,13 @@ type ControlFormProps = {
 const ControlForm = ({ checkFn, setSerialNo, serialNo }: ControlFormProps) => {
   const { t } = useI18n()
 
-  const [validationResult, setValidationResult] = useState<IInputProps["validation"]>(undefined)
+  const [inputValidationResult, setInputValidationResult] = useState(undefined as validationResult)
 
   const handleIdChange = (e) => {
     if (!isSerial(e.target.value)) {
-      setValidationResult('warning')
+      setInputValidationResult('warning')
     } else {
-      setValidationResult(undefined)
+      setInputValidationResult(undefined)
     }
     setSerialNo(e.target.value)
   }
@@ -40,9 +41,9 @@ const ControlForm = ({ checkFn, setSerialNo, serialNo }: ControlFormProps) => {
                 value={serialNo}
                 placeholder={t('ticket_sidebar.serial.label')}
                 onChange={handleIdChange}
-                validation={validationResult}
+                validation={inputValidationResult}
               />
-              <Button isPrimary onClick={checkFn} disabled={!!validationResult}>
+              <Button isPrimary onClick={checkFn} disabled={!!inputValidationResult}>
                 {t('ticket_sidebar.button')}
               </Button>
             </InputGroup>

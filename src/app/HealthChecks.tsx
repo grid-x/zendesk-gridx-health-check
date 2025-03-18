@@ -2,11 +2,18 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { useClient } from './hooks/useClient'
 
-import ControlForm from './ControlForm'
-import CheckResults from './CheckResult'
-import { HealthCheckResult, HealthCheckMetaDataResult, HealthCheckMetaData, SystemCheckResult } from '../HealthCheckAPI'
-import CheckResultSkeleton from './CheckResultSkeleton'
-import { Alert, Title, Close } from '@zendeskgarden/react-notifications'
+import ControlForm from './components/ControlForm'
+
+import LoadingIndicator from './components/LoadingIndicator'
+import { Result } from './components/result'
+import {
+  HealthCheckMetaData,
+  HealthCheckMetaDataResult,
+  HealthCheckResult,
+  SystemCheckResult
+} from './components/api/HealthCheck'
+import ApiError from './components/ApiError'
+import { IZafClient } from './components/api/Zendesk'
 
 const defaultHttpOptions = {
   url: 'https://api.gridx.de/health-checks',
@@ -19,37 +26,14 @@ const defaultHttpOptions = {
   cors: false
 }
 
-// ZAF does not ship w/ the client types. By (sloppily) typing it here,
-// we can use TS in this file w/ ignoring errors.
-type IZafClient = {
-  invoke: (...params: any) => void
-  request: (...params: any) => Promise<any>
-  metadata: (...params: any) => Promise<any>
-  get: (...params: any) => Promise<any>
-}
-type ApiErrorProps = {
-  errorMessage: any
-  onClose: () => void
-}
-
-const ApiError = ({ errorMessage, onClose }: ApiErrorProps) => {
-  return (
-    <Alert type="error">
-      <Title>Error {errorMessage.status}</Title>
-      {errorMessage.responseText}
-      <Close aria-label="Close" onClick={onClose} />
-    </Alert>
-  )
-}
-
 const HealthChecks = () => {
   const [serialNo, setSerialNo] = useState('')
-  const [result, setResult] = useState<SystemCheckResult[]>()
+  const [result, setResult] = useState([] as SystemCheckResult[])
   const [loading, setLoading] = useState(false)
-  const [checkInfo, setCheckInfo] = useState<HealthCheckMetaDataResult>()
+  const [checkInfo, setCheckInfo] = useState({})
   const [debug, setDebug] = useState(false)
-  const [apiError, setApiError] = useState<string>()
-  const resetApiError = () => setApiError(undefined)
+  const [apiError, setApiError] = useState('')
+  const resetApiError = () => setApiError('')
 
   const client: IZafClient = useClient() as IZafClient
 
@@ -60,8 +44,8 @@ const HealthChecks = () => {
       const appMeta = await client.metadata()
       const debugSetting = !!appMeta.settings.debug
       setDebug(debugSetting)
+      
       const serialFieldID = appMeta?.settings?.gridXSerialNumberFieldId
-
       if (serialFieldID) {
         const sn = await getSerialFromCustomField(client, serialFieldID)
         if (debugSetting) {
@@ -79,18 +63,7 @@ const HealthChecks = () => {
         console.log('Requesting ', options)
       }
 
-      client
-        .request(options)
-        .then((response: HealthCheckMetaDataResult) => {
-          setCheckInfo(
-            response.checks.reduce((c, n) => {
-              c[n.type] = n
-              return c
-            }, {} as HealthCheckMetaDataResult)
-          )
-          resetApiError()
-        })
-        .catch((err) => setApiError(err))
+     await getAvailableChecks(options)
     }
     init()
   }, [client])
@@ -129,14 +102,29 @@ const HealthChecks = () => {
       })
   }
 
+  const getAvailableChecks = (options: any) => {
+    return client
+    .request(options)
+    .then((response: HealthCheckMetaDataResult) => {
+      setCheckInfo(
+        response.checks.reduce((c, n) => {
+          c[n.type] = n
+          return c
+        }, {} as HealthCheckMetaDataResult)
+      )
+      resetApiError()
+    })
+    .catch((err) => setApiError(err))
+  }
+
   return (
     <>
       {apiError && <ApiError errorMessage={apiError} onClose={resetApiError} />}
       {!apiError && checkInfo && (
         <ControlForm checkFn={check} setSerialNo={setSerialNo} serialNo={serialNo}></ControlForm>
       )}
-      {!loading && !apiError && checkInfo && <CheckResults result={result ?? []} checkInfo={checkInfo}></CheckResults>}
-      {loading && !apiError && <CheckResultSkeleton />}
+      {!loading && !apiError && checkInfo && <Result result={result ?? []} checkInfo={checkInfo}></Result>}
+      {loading && !apiError && <LoadingIndicator />}
     </>
   )
 }
