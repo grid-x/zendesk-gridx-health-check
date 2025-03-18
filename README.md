@@ -2,6 +2,8 @@
 
 # Zendesk gridX Health Check
 
+Zendesk gridX Health Check is a Zendesk Support App that allows running checks against gridBoxes in the field.
+
 ## Synopsis
 
 ## 📖 Usage
@@ -16,9 +18,6 @@ Prerequisites:
 * Access to a Zendesk instance
 
 ### 🏗️ Building
-
-
-
 
 ----
 
