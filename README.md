@@ -1,6 +1,26 @@
 *Use of this software is subject to important terms and conditions as set forth in the License file*
 
-# React App Scaffold
+# Zendesk gridX Health Check
+
+## Synopsis
+
+## 📖 Usage
+
+## 📦 Installation
+
+ 
+## 🔧 Development
+
+Prerequisites: 
+* `zcli`,  the Zendesk development CLI tool: https://developer.zendesk.com/documentation/apps/getting-started/using-zcli/#installing-and-updating-zcli
+* Access to a Zendesk instance
+
+### 🏗️ Building
+
+
+
+
+----
 
 ## Description
 
