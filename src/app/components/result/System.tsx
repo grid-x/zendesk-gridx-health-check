@@ -13,9 +13,7 @@ type CheckResultProps = SystemCheckResult & {
 // System of checks for one system
 const System = ({ system, results, checkInfo }: CheckResultProps) => (
   <>
-    System UUID
-    <br />
-    <b>{system.id}</b>
+    <a href={`https://xenon.gridx.ai/systems/${system.id}`}>XENON {system.id}</a>
     <Accordion level={4} isExpandable defaultExpandedSections={[]}>
       {results
         .filter((res) => res.type != 'connectionIssues') //FIXME: Include when we figure out how not to time out
