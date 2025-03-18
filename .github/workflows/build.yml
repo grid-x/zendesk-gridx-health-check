@@ -35,8 +35,16 @@ jobs:
       - name: Bump minor version
         run: zcli apps:bump -m dist  
       - name: Deploy the app
-        run: zcli apps:update dist
+        run: zcli apps:package dist
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: Run build"
+      - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        title: "Development Build"
+        files: |
+          dist/tmp/*.zip
