@@ -39,9 +39,6 @@ jobs:
           zcli apps:package dist
           mv dist/tmp/*.zip dist/tmp/zendesk-gridx-health-check_$RELEASE_VERSION.zip
 
-      - name: Deploy the app
-        run:
-
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore: Release'
