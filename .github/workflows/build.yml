@@ -3,6 +3,9 @@ name: Zendesk gridX Health Check Build
 on:
   push:
     branches: [main]
+    paths: 
+      - src/**
+      - .github/**
   workflow_dispatch:
 
 jobs:
