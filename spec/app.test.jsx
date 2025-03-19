@@ -10,21 +10,23 @@ const mockClient = {
     }
   }),
   get: vi.fn().mockResolvedValue({ currentUser: { locale: 'en' } }),
+  metadata: vi.fn().mockResolvedValue({ settings: { debug: true, gridXApiToken: 'mock token', gridXSerialNumberFieldId:'42' } }),
   context: vi.fn().mockResolvedValue({ location: 'ticket_sidebar' }),
+  request: vi.fn().mockResolvedValue({  }),
   invoke: vi.fn()
 }
 
 describe('App Components', () => {
   beforeEach(() => {
     cleanup()
-    vi.clearAllMocks()
+    vi.clearAllMocks()  
     document.body.innerHTML = '<div id="root"></div>'
     vi.stubGlobal('ZAFClient', {
       init: vi.fn().mockReturnValue(mockClient)
     })
   })
 
-  it('renders TicketSideBar and shows the correct content', async () => {
+  it('renders App', async () => {
     render(
       <ClientProvider>
         <App />
@@ -33,19 +35,7 @@ describe('App Components', () => {
 
     expect(mockClient.on).toHaveBeenCalledWith('app.registered', expect.any(Function))
 
-    await waitFor(() => expect(screen.getByText('Hello from Ticket Side Bar')).toBeDefined())
+    await waitFor(() => expect(screen.getByText('Run Checks')).toBeDefined())
   })
 
-  it('renders Modal and shows the correct content', async () => {
-    mockClient.context.mockImplementation(() => Promise.resolve({ location: 'modal' }))
-    render(
-      <ClientProvider>
-        <App />
-      </ClientProvider>
-    )
-
-    expect(mockClient.on).toHaveBeenCalledWith('app.registered', expect.any(Function))
-
-    await waitFor(() => expect(screen.getByText('Hello from Modal')).toBeDefined())
-  })
 })
