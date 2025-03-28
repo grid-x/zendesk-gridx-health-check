@@ -43,7 +43,7 @@ const ControlForm = ({ checkFn, setSerialNo, serialNo }: ControlFormProps) => {
                 onChange={handleIdChange}
                 validation={inputValidationResult}
               />
-              <Button isPrimary onClick={checkFn} disabled={!!inputValidationResult}>
+              <Button onClick={checkFn} disabled={!!inputValidationResult}>
                 {t('ticket_sidebar.button')}
               </Button>
             </InputGroup>

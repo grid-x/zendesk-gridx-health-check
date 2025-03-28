@@ -93,6 +93,7 @@ const HealthChecks = () => {
       .request(options)
       .then((response: HealthCheckResult) => {
         setLoading(false)
+        client.invoke('resize', { width: '100%', height: '75vh' })
         setResult(response?.results ?? [])
         resetApiError()
       })
