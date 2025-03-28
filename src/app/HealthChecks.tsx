@@ -39,7 +39,7 @@ const HealthChecks = () => {
 
   useEffect(() => {
     async function init() {
-      client.invoke('resize', { width: '100%', height: '450px' })
+      client.invoke('resize', { width: '100%', height: '100%' })
 
       const appMeta = await client.metadata()
       const debugSetting = !!appMeta.settings.debug
