@@ -4,7 +4,7 @@ import { Tag } from '@zendeskgarden/react-tags'
 const resultStates = {
   PASSED: { color: 'successHue', label: 'pass' },
   FAILED: { color: 'dangerHue', label: 'fail' },
-  SKIPPED: { color: 'warningHue', label: 'skip' }
+  SKIPPED: { color: 'neutralHue', label: 'skip' }
 }
 
 const StateIcon = ({ state }) => (
