@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col } from '@zendeskgarden/react-grid'
+import { Grid } from '@zendeskgarden/react-grid'
 
 import { StyledGrid } from '../StyledGrid'
 import { SystemCheckResult, HealthCheckMetaData } from  '../api/HealthCheck'
@@ -16,13 +16,13 @@ type ResultProps = {
 const Result = ({ result, checkInfo }: ResultProps) => {
   return (
     <StyledGrid>
-      <Row>
-        <Col>
+      <Grid.Row>
+        <Grid.Col>
           {result.map((res) => (
             <System key={res.system.id} checkInfo={checkInfo} {...res} />
           ))}
-        </Col>
-      </Row>
+        </Grid.Col>
+      </Grid.Row>
     </StyledGrid>
   )
 }

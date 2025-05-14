@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Alert, Title, Close } from '@zendeskgarden/react-notifications'
+import { Alert } from '@zendeskgarden/react-notifications'
 
 type ApiErrorProps = {
   errorMessage: any
@@ -10,9 +10,9 @@ type ApiErrorProps = {
 const ApiError = ({ errorMessage, onClose }: ApiErrorProps) => {
   return (
     <Alert type="error">
-      <Title>Error {errorMessage.status}</Title>
+      <Alert.Title>Error {errorMessage.status}</Alert.Title>
       {errorMessage.responseText}
-      <Close aria-label="Close" onClick={onClose} />
+      <Alert.Close aria-label="Close" onClick={onClose} />
     </Alert>
   )
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Row as TRow, Cell as TCell } from '@zendeskgarden/react-tables'
+import { Table } from '@zendeskgarden/react-tables'
 
 import { IndividualCheckResult, HealthCheckMetaData } from  '../api/HealthCheck'
 import { Accordion } from '@zendeskgarden/react-accordions'
@@ -25,10 +25,10 @@ const Check = ({
         {Object.keys(properties)?.length ? (
           <Table size="small">
             {Object.entries(properties).map(([k, v]) => (
-              <TRow>
-                <TCell>{k}</TCell>
-                <TCell>{v}</TCell>
-              </TRow>
+              <Table.Row>
+                <Table.Cell>{k}</Table.Cell>
+                <Table.Cell>{v}</Table.Cell>
+              </Table.Row>
             ))}
           </Table>
         ) : (

@@ -2,8 +2,8 @@ import React from 'react'
 import { useState } from 'react'
 import { useI18n } from '../hooks/useI18n'
 import { Button } from '@zendeskgarden/react-buttons'
-import { Row, Col } from '@zendeskgarden/react-grid'
-import { Field, IInputProps, Input, InputGroup, Message } from '@zendeskgarden/react-forms'
+import { Grid } from '@zendeskgarden/react-grid'
+import { Field, IInputProps, Input, InputGroup } from '@zendeskgarden/react-forms'
 
 import { StyledGrid } from './StyledGrid'
 
@@ -33,8 +33,8 @@ const ControlForm = ({ checkFn, setSerialNo, serialNo }: ControlFormProps) => {
 
   return (
     <StyledGrid>
-      <Row>
-        <Col>
+      <Grid.Row>
+        <Grid.Col>
           <Field>
             <InputGroup>
               <Input
@@ -48,15 +48,15 @@ const ControlForm = ({ checkFn, setSerialNo, serialNo }: ControlFormProps) => {
               </Button>
             </InputGroup>
           </Field>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
+        </Grid.Col>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Col>
           {serialNo && !isSerial(serialNo) && (
-            <Message validation="warning">{t('ticket_sidebar.serial.invalid')}</Message>
+            <Field.Message validation="warning">{t('ticket_sidebar.serial.invalid')}</Field.Message>
           )}
-        </Col>
-      </Row>
+        </Grid.Col>
+      </Grid.Row>
     </StyledGrid>
   )
 }
