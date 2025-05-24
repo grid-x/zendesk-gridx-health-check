@@ -1,26 +1,30 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useI18n } from '../hooks/useI18n'
-import { Button } from '@zendeskgarden/react-buttons'
 import { Grid } from '@zendeskgarden/react-grid'
 import { Field, IInputProps, Input, InputGroup } from '@zendeskgarden/react-forms'
-
 import { StyledGrid } from './StyledGrid'
+import { IMenuProps, Item, Menu } from '@zendeskgarden/react-dropdowns'
+import { capitalize } from '../utils/text'
 
 const serialRegex = /^[A-Z](\d{3}-){5}(B|P)-X$/
 const isSerial = (serial) => serialRegex.test(serial)
 
-type validationResult = IInputProps['validation']
-
 type ControlFormProps = {
-  checkFn: () => void
+  checkFn: (profile: string) => void
   setSerialNo: (id: string) => void
   serialNo: string
+  profiles: string[]
 }
-const ControlForm = ({ checkFn, setSerialNo, serialNo }: ControlFormProps) => {
+
+const ControlForm = ({ checkFn, setSerialNo, serialNo, profiles }: ControlFormProps) => {
   const { t } = useI18n()
 
-  const [inputValidationResult, setInputValidationResult] = useState(undefined as validationResult)
+  const [inputValidationResult, setInputValidationResult] = useState<IInputProps['validation']>(undefined)
+
+  const handleChange = useCallback<NonNullable<IMenuProps['onChange']>>(
+    (changes: { value: string }) => {
+      changes.value && checkFn(changes.value)
+    }, [])
 
   const handleIdChange = (e) => {
     if (!isSerial(e.target.value)) {
@@ -43,9 +47,17 @@ const ControlForm = ({ checkFn, setSerialNo, serialNo }: ControlFormProps) => {
                 onChange={handleIdChange}
                 validation={inputValidationResult}
               />
-              <Button onClick={checkFn} disabled={!!inputValidationResult}>
-                {t('ticket_sidebar.button')}
-              </Button>
+                <Menu
+                  button={t('ticket_sidebar.button')}
+                  onChange={handleChange}
+                  placement="bottom-end"
+                >
+                  {profiles.map((profile: string, i: number) => (
+                    <Item key={i} value={profile}>
+                      {capitalize(profile)}
+                    </Item>
+                  ))}
+                </Menu>
             </InputGroup>
           </Field>
         </Grid.Col>
