@@ -1,5 +1,4 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useClient } from './hooks/useClient'
 
 import ControlForm from './components/ControlForm'
@@ -28,9 +27,9 @@ const defaultHttpOptions = {
 
 const HealthChecks = () => {
   const [serialNo, setSerialNo] = useState('')
-  const [result, setResult] = useState([] as SystemCheckResult[])
+  const [result, setResult] = useState<SystemCheckResult>([])
   const [loading, setLoading] = useState(false)
-  const [checkInfo, setCheckInfo] = useState({})
+  const [checkInfo, setCheckInfo] = useState<HealthCheckMetaDataResult>({})
   const [debug, setDebug] = useState(false)
   const [apiError, setApiError] = useState('')
   const resetApiError = () => setApiError('')
@@ -44,7 +43,7 @@ const HealthChecks = () => {
       const appMeta = await client.metadata()
       const debugSetting = !!appMeta.settings.debug
       setDebug(debugSetting)
-      
+
       const serialFieldID = appMeta?.settings?.gridXSerialNumberFieldId
       if (serialFieldID) {
         const sn = await getSerialFromCustomField(client, serialFieldID)
@@ -63,12 +62,12 @@ const HealthChecks = () => {
         console.log('Requesting ', options)
       }
 
-     await getAvailableChecks(options)
+      await getAvailableChecks(options)
     }
     init()
   }, [client])
 
-  const check = () => {
+  const check = (profile: string) => {
     const options = {
       ...defaultHttpOptions,
       type: 'POST',
@@ -78,10 +77,8 @@ const HealthChecks = () => {
             gatewaySerialNumber: serialNo
           }
         ],
-        //Run all checks
-        checks: Object.values<HealthCheckMetaData>(checkInfo)
-          .filter((c) => c.type != 'connectionIssues') //FIXME: Include when we figure out how not to time out
-          .map((c) => ({ type: c.type }))
+        checks: [],
+        profile: profile
       })
     }
     if (debug) {
@@ -105,24 +102,42 @@ const HealthChecks = () => {
 
   const getAvailableChecks = (options: any) => {
     return client
-    .request(options)
-    .then((response: HealthCheckMetaDataResult) => {
-      setCheckInfo(
-        response.checks.reduce((c, n) => {
-          c[n.type] = n
-          return c
-        }, {} as HealthCheckMetaDataResult)
-      )
-      resetApiError()
-    })
-    .catch((err) => setApiError(err))
+      .request(options)
+      .then((response: HealthCheckMetaDataResult) => {
+        setCheckInfo(
+          response.checks.reduce((c, n) => {
+            c[n.type] = n
+            return c
+          }, {} as HealthCheckMetaDataResult)
+        )
+        resetApiError()
+      })
+      .catch((err) => setApiError(err))
+  }
+
+  const filterProfiles = (data: HealthCheckMetaData[]): string[] => {
+    if (data === undefined || data.length === 0) {
+      return []
+    }
+
+    // extract all profiles from checks
+    let profiles: string[] = []
+    data.map(check => check.profiles.map(profile => profiles.push(profile)))
+
+    // filters all distinct profiles
+    return profiles.filter((profile, i, arr) => arr.findIndex(p => p === profile) === i)
   }
 
   return (
     <>
       {apiError && <ApiError errorMessage={apiError} onClose={resetApiError} />}
       {!apiError && checkInfo && (
-        <ControlForm checkFn={check} setSerialNo={setSerialNo} serialNo={serialNo}></ControlForm>
+        <ControlForm
+          checkFn={check}
+          setSerialNo={setSerialNo}
+          serialNo={serialNo}
+          profiles={filterProfiles(checkInfo.checks)}
+        />
       )}
       {!loading && !apiError && checkInfo && <Result result={result ?? []} checkInfo={checkInfo}></Result>}
       {loading && !apiError && <LoadingIndicator />}

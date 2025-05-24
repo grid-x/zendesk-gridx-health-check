@@ -23,6 +23,7 @@ export type HealthCheckMetaData = {
   type: CheckType
   name: string
   description: string
+  profiles: string[]
 }
 
 export type HealthCheckMetaDataResult = {
