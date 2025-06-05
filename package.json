@@ -16,11 +16,12 @@
   },
   "dependencies": {
     "@zendeskgarden/css-bedrock": "^9.1.1",
+    "@zendeskgarden/react-accordions": "^9.6.0",
     "@zendeskgarden/react-buttons": "^9.6.0",
+    "@zendeskgarden/react-dropdowns": "^9.6.0",
     "@zendeskgarden/react-forms": "^9.6.0",
     "@zendeskgarden/react-grid": "^9.6.0",
     "@zendeskgarden/react-loaders": "^9.6.0",
-    "@zendeskgarden/react-accordions": "^9.6.0",
     "@zendeskgarden/react-notifications": "^9.6.0",
     "@zendeskgarden/react-tables": "^9.6.0",
     "@zendeskgarden/react-tags": "^9.6.0",
