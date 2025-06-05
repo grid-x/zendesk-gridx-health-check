@@ -29,7 +29,7 @@ const HealthChecks = () => {
   const [serialNo, setSerialNo] = useState('')
   const [result, setResult] = useState<SystemCheckResult>([])
   const [loading, setLoading] = useState(false)
-  const [checkInfo, setCheckInfo] = useState<HealthCheckMetaDataResult>({})
+  const [checkInfo, setCheckInfo] = useState<HealthCheckMetaData>([])
   const [debug, setDebug] = useState(false)
   const [apiError, setApiError] = useState('')
   const resetApiError = () => setApiError('')
@@ -104,12 +104,7 @@ const HealthChecks = () => {
     return client
       .request(options)
       .then((response: HealthCheckMetaDataResult) => {
-        setCheckInfo(
-          response.checks.reduce((c, n) => {
-            c[n.type] = n
-            return c
-          }, {} as HealthCheckMetaDataResult)
-        )
+        setCheckInfo(response.checks)
         resetApiError()
       })
       .catch((err) => setApiError(err))
@@ -136,7 +131,7 @@ const HealthChecks = () => {
           checkFn={check}
           setSerialNo={setSerialNo}
           serialNo={serialNo}
-          profiles={filterProfiles(checkInfo.checks)}
+          profiles={filterProfiles(checkInfo)}
         />
       )}
       {!loading && !apiError && checkInfo && <Result result={result ?? []} checkInfo={checkInfo}></Result>}
