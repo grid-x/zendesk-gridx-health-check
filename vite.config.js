@@ -53,6 +53,11 @@ export default ({ mode }) => {
       },
       outDir: resolve(__dirname, 'dist/assets'),
       emptyOutDir: true
+    },
+    resolve: {
+      alias: {
+        '~': resolve(__dirname, 'src'),
+      }
     }
   })
 }
