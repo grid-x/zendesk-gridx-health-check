@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useCallback } from 'react'
-import { useClient } from '../hooks/useClient'
-import I18n from '../../lib/i18n'
+import I18n from '~/lib/i18n'
+import { useClient } from '~/app/hooks/useClient'
+
 
 export const TranslationContext = createContext()
 

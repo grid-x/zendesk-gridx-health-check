@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { useClient } from './hooks/useClient'
-
+import { useCallback, useEffect, useState } from 'react'
+import { useClient } from './hooks/useClient.js'
 import ControlForm from './components/ControlForm'
-
 import LoadingIndicator from './components/LoadingIndicator'
 import { Result } from './components/result'
 import {
+  HealthCheckInfo,
   HealthCheckMetaData,
   HealthCheckMetaDataResult,
   HealthCheckResult,
@@ -13,6 +12,8 @@ import {
 } from './components/api/HealthCheck'
 import ApiError from './components/ApiError'
 import { IZafClient } from './components/api/Zendesk'
+import { StyledFlex } from './components/layout/StyledFlex'
+
 
 const defaultHttpOptions = {
   url: 'https://api.gridx.de/health-checks',
@@ -27,19 +28,37 @@ const defaultHttpOptions = {
 
 const HealthChecks = () => {
   const [serialNo, setSerialNo] = useState('')
-  const [result, setResult] = useState<SystemCheckResult>([])
+  const [profiles, setProfiles] = useState<string[]>([])
+  const [result, setResult] = useState<SystemCheckResult[] | undefined>(undefined)
   const [loading, setLoading] = useState(false)
-  const [checkInfo, setCheckInfo] = useState<HealthCheckMetaData>([])
+  const [checkInfo, setCheckInfo] = useState<HealthCheckInfo>()
   const [debug, setDebug] = useState(false)
   const [apiError, setApiError] = useState('')
-  const resetApiError = () => setApiError('')
 
+  const resetApiError = () => setApiError('')
   const client: IZafClient = useClient() as IZafClient
+
+  const getAvailableChecks = useCallback(async (options: any) => {
+    return client
+      .request(options)
+      .then((response: HealthCheckMetaDataResult) => {
+        setCheckInfo(
+          response.checks.reduce((c, n) => {
+            c[n.type] = n
+            return c
+          }, {} as HealthCheckInfo)
+        )
+
+        setProfiles(filterProfiles(response.checks))
+        resetApiError()
+      })
+      .catch((err) => {
+        setApiError(err)
+      })
+  },[client])
 
   useEffect(() => {
     async function init() {
-      client.invoke('resize', { width: '100%', height: '100%' })
-
       const appMeta = await client.metadata()
       const debugSetting = !!appMeta.settings.debug
       setDebug(debugSetting)
@@ -64,10 +83,11 @@ const HealthChecks = () => {
 
       await getAvailableChecks(options)
     }
-    init()
-  }, [client])
 
-  const check = (profile: string) => {
+    init()
+  }, [client, getAvailableChecks])
+
+  const check = async (serialNo: string, profile: string) => {
     const options = {
       ...defaultHttpOptions,
       type: 'POST',
@@ -78,36 +98,27 @@ const HealthChecks = () => {
           }
         ],
         checks: [],
-        profile: profile
+        profile
       })
     }
+
     if (debug) {
       console.log('Requesting ', options)
     }
 
     setLoading(true)
-    return client
+    client
       .request(options)
       .then((response: HealthCheckResult) => {
-        setLoading(false)
-        client.invoke('resize', { width: '100%', height: '75vh' })
         setResult(response?.results ?? [])
         resetApiError()
       })
       .catch((err) => {
         setApiError(err)
+      })
+      .finally(() => {
         setLoading(false)
       })
-  }
-
-  const getAvailableChecks = (options: any) => {
-    return client
-      .request(options)
-      .then((response: HealthCheckMetaDataResult) => {
-        setCheckInfo(response.checks)
-        resetApiError()
-      })
-      .catch((err) => setApiError(err))
   }
 
   const filterProfiles = (data: HealthCheckMetaData[]): string[] => {
@@ -116,27 +127,44 @@ const HealthChecks = () => {
     }
 
     // extract all profiles from checks
-    let profiles: string[] = []
-    data.map(check => check.profiles.map(profile => profiles.push(profile)))
+    const profiles: string[] = []
+    data
+      .map(check => check.profiles
+        .map(profile => profiles
+          .push(profile)))
 
     // filters all distinct profiles
-    return profiles.filter((profile, i, arr) => arr.findIndex(p => p === profile) === i)
+    return profiles
+      .filter((profile, i, arr) => arr
+        .findIndex(p => p === profile) === i)
   }
 
   return (
-    <>
-      {apiError && <ApiError errorMessage={apiError} onClose={resetApiError} />}
+    <StyledFlex>
+      {apiError &&
+        <ApiError
+          errorMessage={apiError}
+          onClose={resetApiError}
+        />
+      }
       {!apiError && checkInfo && (
         <ControlForm
           checkFn={check}
           setSerialNo={setSerialNo}
           serialNo={serialNo}
-          profiles={filterProfiles(checkInfo)}
+          profiles={profiles}
         />
       )}
-      {!loading && !apiError && checkInfo && <Result result={result ?? []} checkInfo={checkInfo}></Result>}
-      {loading && !apiError && <LoadingIndicator />}
-    </>
+      {!loading && !apiError && checkInfo &&
+        <Result
+          result={result ?? []}
+          checkInfo={checkInfo}
+        />
+      }
+      {loading && !apiError &&
+        <LoadingIndicator />
+      }
+    </StyledFlex>
   )
 }
 

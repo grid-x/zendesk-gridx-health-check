@@ -15,6 +15,7 @@
     "build:prod": "zcli apps:package ./dist"
   },
   "dependencies": {
+    "@typescript-eslint/parser": "^8.34.0",
     "@zendeskgarden/css-bedrock": "^9.1.1",
     "@zendeskgarden/react-accordions": "^9.6.0",
     "@zendeskgarden/react-buttons": "^9.6.0",
@@ -29,11 +30,14 @@
     "@zendeskgarden/react-typography": "^9.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.11"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.1.0",
     "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/styled-components": "^5.1.34",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",

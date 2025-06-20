@@ -1,25 +1,25 @@
-import React from 'react'
 import { Grid } from '@zendeskgarden/react-grid'
-
-import { StyledGrid } from '../StyledGrid'
-import { SystemCheckResult, HealthCheckMetaData } from  '../api/HealthCheck'
+import { SystemCheckResult, HealthCheckInfo } from '../api/HealthCheck'
 import System from './System'
+import { StyledGrid } from '../layout/StyledGrid'
 
-type HealthCheckInfo = Record<string, HealthCheckMetaData>
 
 type ResultProps = {
   result: SystemCheckResult[]
   checkInfo: HealthCheckInfo
 }
 
-// List of systems with checks
 const Result = ({ result, checkInfo }: ResultProps) => {
   return (
-    <StyledGrid>
+    <StyledGrid style={{ overflow: 'scroll' }}>
       <Grid.Row>
         <Grid.Col>
           {result.map((res) => (
-            <System key={res.system.id} checkInfo={checkInfo} {...res} />
+            <System
+              key={res.system.id}
+              checkInfo={checkInfo}
+              {...res}
+            />
           ))}
         </Grid.Col>
       </Grid.Row>
