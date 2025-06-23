@@ -11,7 +11,11 @@
     "support": {
       "ticket_sidebar": {
         "url": "http://localhost:3000/",
-        "flexible": true
+        "flexible": true,
+        "size": {
+          "height": "60vh",
+          "width": "100%"
+        }
       }
     }
   },

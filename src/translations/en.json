@@ -21,7 +21,7 @@
     }
   },
   "ticket_sidebar": {
-    "button": "Run Checks",
+    "button": "Run checks",
     "serial": {
       "label": "Gateway S/N",
       "invalid": "Gateway S/N must be a valid gridBox serial number"

@@ -1,19 +1,22 @@
-import React from 'react'
 import { Table } from '@zendeskgarden/react-tables'
-
-import { IndividualCheckResult, HealthCheckMetaData } from  '../api/HealthCheck'
+import { IndividualCheckResult } from '../api/HealthCheck'
 import { Accordion } from '@zendeskgarden/react-accordions'
 import StateIcon from './StateIcon'
+import { MD } from '@zendeskgarden/react-typography'
 
 
-// Individual Check
+type CheckProps = {
+  name: string
+  description: string
+} & IndividualCheckResult
+
 const Check = ({
   type,
   state,
   name,
   description,
   properties
-}: IndividualCheckResult & HealthCheckMetaData & { key: string }) => {
+}: CheckProps) => {
   return (
     <Accordion.Section key={`check-result-${type}`}>
       <Accordion.Header>
@@ -21,19 +24,22 @@ const Check = ({
         <Accordion.Label>{name}</Accordion.Label>
       </Accordion.Header>
       <Accordion.Panel>
-        {description}
+        <MD style={{ paddingBottom: '1em' }}>
+          {description}
+        </MD>
         {Object.keys(properties)?.length ? (
           <Table size="small">
-            {Object.entries(properties).map(([k, v]) => (
-              <Table.Row>
-                <Table.Cell>{k}</Table.Cell>
+            {Object.entries(properties).map(([k, v], i) => (
+              <Table.Row
+                key={`${{k}}-${{i}}`}
+                isStriped={i % 2 === 0}
+              >
+                <Table.Cell style={{ overflowWrap: 'break-word'}}>{k}</Table.Cell>
                 <Table.Cell>{v}</Table.Cell>
               </Table.Row>
             ))}
           </Table>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </Accordion.Panel>
     </Accordion.Section>
   )

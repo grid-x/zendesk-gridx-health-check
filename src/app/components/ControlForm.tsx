@@ -1,32 +1,29 @@
-import React, { useCallback, useState } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import { useI18n } from '../hooks/useI18n'
 import { Grid } from '@zendeskgarden/react-grid'
 import { Field, IInputProps, Input, InputGroup } from '@zendeskgarden/react-forms'
-import { StyledGrid } from './StyledGrid'
 import { IMenuProps, Item, Menu } from '@zendeskgarden/react-dropdowns'
-import { capitalize } from '../utils/text'
 
 const serialRegex = /^[A-Z](\d{3}-){5}(B|P)-X$/
-const isSerial = (serial) => serialRegex.test(serial)
+const isSerial = (serial: string) => serialRegex.test(serial)
 
 type ControlFormProps = {
-  checkFn: (profile: string) => void
+  checkFn: (serialNo: string, profile: string) => void
   setSerialNo: (id: string) => void
   serialNo: string
-  profiles: string[]
+  profiles?: string[]
 }
 
 const ControlForm = ({ checkFn, setSerialNo, serialNo, profiles }: ControlFormProps) => {
   const { t } = useI18n()
-
   const [inputValidationResult, setInputValidationResult] = useState<IInputProps['validation']>(undefined)
 
   const handleChange = useCallback<NonNullable<IMenuProps['onChange']>>(
-    (changes: { value: string }) => {
-      changes.value && checkFn(changes.value)
-    }, [])
+    (changes) => {
+      changes.value && checkFn(serialNo, changes.value)
+    }, [checkFn, serialNo])
 
-  const handleIdChange = (e) => {
+  const handleIdChange = (e: any) => {
     if (!isSerial(e.target.value)) {
       setInputValidationResult('warning')
     } else {
@@ -35,8 +32,19 @@ const ControlForm = ({ checkFn, setSerialNo, serialNo, profiles }: ControlFormPr
     setSerialNo(e.target.value)
   }
 
+  const itemMeta = (profile: string): ReactNode => {
+    switch (profile) {
+      case 'quick':
+        return <Item.Meta>Includes fast executing checks</Item.Meta>
+      case 'extended':
+        return <Item.Meta>Includes data heavy checks</Item.Meta>
+      default:
+        return null
+    }
+  }
+
   return (
-    <StyledGrid>
+    <Grid>
       <Grid.Row>
         <Grid.Col>
           <Field>
@@ -46,18 +54,19 @@ const ControlForm = ({ checkFn, setSerialNo, serialNo, profiles }: ControlFormPr
                 placeholder={t('ticket_sidebar.serial.label')}
                 onChange={handleIdChange}
                 validation={inputValidationResult}
+                style={{ textOverflow: 'ellipsis' }}
               />
-                <Menu
-                  button={t('ticket_sidebar.button')}
-                  onChange={handleChange}
-                  placement="bottom-end"
-                >
-                  {profiles.map((profile: string, i: number) => (
-                    <Item key={i} value={profile}>
-                      {capitalize(profile)}
-                    </Item>
-                  ))}
-                </Menu>
+              <Menu
+                button={t('ticket_sidebar.button')}
+                onChange={handleChange}
+              >
+                {profiles?.map((profile: string, i: number) => (
+                  <Item key={i} value={profile}>
+                    {`Run ${profile.toLowerCase()} checks`}
+                    {itemMeta(profile)}
+                  </Item>
+                ))}
+              </Menu>
             </InputGroup>
           </Field>
         </Grid.Col>
@@ -69,7 +78,7 @@ const ControlForm = ({ checkFn, setSerialNo, serialNo, profiles }: ControlFormPr
           )}
         </Grid.Col>
       </Grid.Row>
-    </StyledGrid>
+    </Grid>
   )
 }
 
