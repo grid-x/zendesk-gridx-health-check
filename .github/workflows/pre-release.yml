@@ -41,7 +41,10 @@ jobs:
         run: npm i @zendesk/zcli -g
 
       - name: Install app dependencies
-        run: npm install
+        run: npm ci
+
+      - name: List all installed packages
+        run: npm ls
 
       - name: Run build
         run: npm run build
