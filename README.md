@@ -2,6 +2,11 @@
 
 # Zendesk gridX Health Check
 
+> [!WARNING]
+> **This app is deprecated and will stop working on 2026-10-30.** The gridX `/health-checks` API it relies on is being
+> shut down without a replacement. Do not install it anymore. If you have it installed, uninstall it from your Zendesk
+> admin console and revoke the gridX API token you created for it. This repository will be archived after the shutdown.
+
 Zendesk gridX Health Check is a Zendesk Support App that allows running predefined tests and plausibility checks against gridBoxes in the field.
 
 ![Zendesk gridX Health Check](./doc/app.png)
